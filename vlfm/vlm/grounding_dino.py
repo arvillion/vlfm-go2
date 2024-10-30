@@ -75,8 +75,10 @@ class GroundingDINO:
 
 
 class GroundingDINOClient:
-    def __init__(self, port: int = 12181):
-        self.url = f"http://localhost:{port}/gdino"
+    def __init__(self, host: str = "localhost:12181"):
+        if isinstance(host, int):
+            host = f"localhost:{host}"
+        self.url = f"http://{host}/gdino"
 
     def predict(self, image_numpy: np.ndarray, caption: Optional[str] = "") -> ObjectDetections:
         response = send_request(self.url, image=image_numpy, caption=caption)
@@ -90,6 +92,8 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--port", type=int, default=12181)
+    parser.add_argument("--host", type=str, default="localhost")
+
     args = parser.parse_args()
 
     print("Loading model...")
@@ -102,4 +106,4 @@ if __name__ == "__main__":
     gdino = GroundingDINOServer()
     print("Model loaded!")
     print(f"Hosting on port {args.port}...")
-    host_model(gdino, name="gdino", port=args.port)
+    host_model(gdino, name="gdino", port=args.port, host=args.host)

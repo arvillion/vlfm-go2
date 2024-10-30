@@ -56,8 +56,10 @@ class BLIP2:
 
 
 class BLIP2Client:
-    def __init__(self, port: int = 12185):
-        self.url = f"http://localhost:{port}/blip2"
+    def __init__(self, host: str = "localhost:12185"):
+        if isinstance(host, int):
+            host = f"localhost:{host}"
+        self.url = f"http://{host}/blip2"
 
     def ask(self, image: np.ndarray, prompt: Optional[str] = None) -> str:
         if prompt is None:
@@ -72,6 +74,8 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--port", type=int, default=8070)
+    parser.add_argument("--host", type=str, default="localhost")
+
     args = parser.parse_args()
 
     print("Loading model...")
@@ -85,4 +89,4 @@ if __name__ == "__main__":
     blip = BLIP2Server(name="blip2_t5", model_type="pretrain_flant5xl")
     print("Model loaded!")
     print(f"Hosting on port {args.port}...")
-    host_model(blip, name="blip2", port=args.port)
+    host_model(blip, name="blip2", port=args.port, host=args.host)

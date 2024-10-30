@@ -21,7 +21,7 @@ class ServerMixin:
         raise NotImplementedError
 
 
-def host_model(model: Any, name: str, port: int = 5000) -> None:
+def host_model(model: Any, name: str, port: int = 5000, host="localhost") -> None:
     """
     Hosts a model as a REST API using Flask.
     """
@@ -32,7 +32,7 @@ def host_model(model: Any, name: str, port: int = 5000) -> None:
         payload = request.json
         return jsonify(model.process_payload(payload))
 
-    app.run(host="localhost", port=port)
+    app.run(host=host, port=port)
 
 
 def bool_arr_to_str(arr: np.ndarray) -> str:

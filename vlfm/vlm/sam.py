@@ -58,8 +58,8 @@ class MobileSAM:
 
 
 class MobileSAMClient:
-    def __init__(self, port: int = 12183):
-        self.url = f"http://localhost:{port}/mobile_sam"
+    def __init__(self, host: str = "localhost:12183"):
+        self.url = f"http://{host}/mobile_sam"
 
     def segment_bbox(self, image: np.ndarray, bbox: List[int]) -> np.ndarray:
         response = send_request(self.url, image=image, bbox=bbox)
@@ -74,6 +74,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--port", type=int, default=12183)
+    parser.add_argument("--host", type=str, default="localhost")
     args = parser.parse_args()
 
     print("Loading model...")
@@ -88,4 +89,4 @@ if __name__ == "__main__":
     mobile_sam = MobileSAMServer(sam_checkpoint=os.environ.get("MOBILE_SAM_CHECKPOINT", "data/mobile_sam.pt"))
     print("Model loaded!")
     print(f"Hosting on port {args.port}...")
-    host_model(mobile_sam, name="mobile_sam", port=args.port)
+    host_model(mobile_sam, name="mobile_sam", port=args.port, host=args.host)

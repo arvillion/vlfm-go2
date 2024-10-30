@@ -111,8 +111,10 @@ class YOLOv7:
 
 
 class YOLOv7Client:
-    def __init__(self, port: int = 12184):
-        self.url = f"http://localhost:{port}/yolov7"
+    def __init__(self, host: str = "localhost:12184"):
+        if isinstance(host, int):
+            host = f"localhost:{host}"
+        self.url = f"http://{host}/yolov7"
 
     def predict(self, image_numpy: np.ndarray) -> ObjectDetections:
         response = send_request(self.url, image=image_numpy)
@@ -126,6 +128,8 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--port", type=int, default=12184)
+    parser.add_argument("--host", type=str, default="localhost")
+
     args = parser.parse_args()
 
     print("Loading model...")
@@ -138,7 +142,7 @@ if __name__ == "__main__":
     yolov7 = YOLOv7Server("data/yolov7-e6e.pt")
     print("Model loaded!")
     print(f"Hosting on port {args.port}...")
-    host_model(yolov7, name="yolov7", port=args.port)
+    host_model(yolov7, name="yolov7", port=args.port, host=args.host)
 
     # Instantiate model
     # model = YOLOv7(weights="data/yolov7-e6e.pt")

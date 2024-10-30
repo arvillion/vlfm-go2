@@ -45,7 +45,7 @@ class BaseITMPolicy(BaseObjectNavPolicy):
         **kwargs: Any,
     ):
         super().__init__(*args, **kwargs)
-        self._itm = BLIP2ITMClient(port=int(os.environ.get("BLIP2ITM_PORT", "12182")))
+        self._itm = BLIP2ITMClient(host=os.environ.get("BLIP2ITM_HOST", 12182))
         self._text_prompt = text_prompt
         self._value_map: ValueMap = ValueMap(
             value_channels=len(text_prompt.split(PROMPT_SEPARATOR)),

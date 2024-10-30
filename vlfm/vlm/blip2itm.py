@@ -55,8 +55,10 @@ class BLIP2ITM:
 
 
 class BLIP2ITMClient:
-    def __init__(self, port: int = 12182):
-        self.url = f"http://localhost:{port}/blip2itm"
+    def __init__(self, host: str = "localhost:12182"):
+        if isinstance(host, int):
+            host = f"localhost:{host}"
+        self.url = f"http://{host}/blip2itm"
 
     def cosine(self, image: np.ndarray, txt: str) -> float:
         print(f"BLIP2ITMClient.cosine: {image.shape}, {txt}")
@@ -69,6 +71,8 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument("--port", type=int, default=12182)
+    parser.add_argument("--host", type=str, default="localhost")
+
     args = parser.parse_args()
 
     print("Loading model...")
@@ -81,4 +85,4 @@ if __name__ == "__main__":
     blip = BLIP2ITMServer()
     print("Model loaded!")
     print(f"Hosting on port {args.port}...")
-    host_model(blip, name="blip2itm", port=args.port)
+    host_model(blip, name="blip2itm", port=args.port, host=args.host)

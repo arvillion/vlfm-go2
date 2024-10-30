@@ -61,12 +61,12 @@ class BaseObjectNavPolicy(BasePolicy):
         **kwargs: Any,
     ) -> None:
         super().__init__()
-        self._object_detector = GroundingDINOClient(port=int(os.environ.get("GROUNDING_DINO_PORT", "12181")))
-        self._coco_object_detector = YOLOv7Client(port=int(os.environ.get("YOLOV7_PORT", "12184")))
-        self._mobile_sam = MobileSAMClient(port=int(os.environ.get("SAM_PORT", "12183")))
+        self._object_detector = GroundingDINOClient(host=os.environ.get("GROUNDING_DINO_HOST", 12181))
+        self._coco_object_detector = YOLOv7Client(host=os.environ.get("YOLOV7_HOST", 12184))
+        self._mobile_sam = MobileSAMClient(host=os.environ.get("SAM_HOST", 12183))
         self._use_vqa = use_vqa
         if use_vqa:
-            self._vqa = BLIP2Client(port=int(os.environ.get("BLIP2_PORT", "12185")))
+            self._vqa = BLIP2Client(host=os.environ.get("BLIP2_HOST", 12185))
         self._pointnav_policy = WrappedPointNavResNetPolicy(pointnav_policy_path)
         self._object_map: ObjectPointCloudMap = ObjectPointCloudMap(erosion_size=object_map_erosion_size)
         self._depth_image_shape = tuple(depth_image_shape)
